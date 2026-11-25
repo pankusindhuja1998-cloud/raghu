@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VOICE-TO-EDGE // Knowledge Distillation for Speech Emotion Recognition</title>
+  <meta name="description" content="Power-packed interactive web app exploring Knowledge Distillation for compressing Speech Emotion Recognition (SER) models for ultra-low-latency edge AI." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow glow-cyan" aria-hidden="true"></div>
+  <div class="bg-glow glow-amber" aria-hidden="true"></div>
+
+  <!-- Top Navigation -->
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a href="#hero" class="brand">
+        <span class="brand-pulse"></span>
+        <span class="brand-text">VOICE<span class="accent-cyan">-TO-</span>EDGE</span>
+        <span class="brand-tag">SER-KD LAB</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary Navigation">
+        <a href="#paradigms">Distillation</a>
+        <a href="#kd-simulator">Temperature Lab</a>
+        <a href="#audio-sandbox">Acoustic Sandbox</a>
+        <a href="#layer-mapping">Layer Mapping</a>
+        <a href="#benchmarks">Benchmarks</a>
+      </nav>
+      <a href="#kd-simulator" class="btn btn-sm btn-primary">Launch KD Lab</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <div class="eyebrow">
+            <span class="badge-dot"></span>
+            SPEECH EMOTION RECOGNITION &bull; MODEL COMPRESSION &bull; EDGE AI
+          </div>
+          <h1>
+            <span class="title-kicker">VOICE-TO-EDGE:</span>
+            Distilling <span class="gradient-text">Acoustic Giants</span> into Sub-5ms Emotion Engines
+          </h1>
+          <p class="hero-lead">
+            Heavyweight speech transformers like <strong>WavLM-Large</strong> and <strong>HuBERT</strong> capture subtle vocal affect—jitter, pitch contours, spectral tilt—but demand hundreds of megabytes and GPU-scale latency. <strong>Knowledge Distillation (KD)</strong> transfers their emotional dark knowledge into ultra-lean edge students with up to <strong>98% compression</strong> and real-time on-device inference.
+          </p>
+          <div class="hero-actions">
+            <a href="#audio-sandbox" class="btn btn-primary">Test Live Acoustic Sandbox</a>
+            <a href="#kd-simulator" class="btn btn-ghost">Tune &tau; &amp; &alpha; Simulator</a>
+          </div>
+          <div class="hero-metrics">
+            <div class="metric-card">
+              <div class="metric-value cyan">175&times;</div>
+              <div class="metric-label">Parameter Reduction<br><small>316M &rarr; 1.8M Params</small></div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value amber">4.2 ms</div>
+              <div class="metric-label">Edge CPU Latency<br><small>Real-Time Streaming</small></div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value violet">96.4%</div>
+              <div class="metric-label">Teacher Retention<br><small>UAR Preserved via KD</small></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero Live Visual: Teacher -> Distillation -> Student Pipeline -->
+        <div class="hero-visual glass-card">
+          <div class="card-header">
+            <span class="card-title">LIVE DISTILLATION TOPOLOGY</span>
+            <span class="status-pill">ON-DEVICE READY</span>
+          </div>
+          <canvas id="heroTopologyCanvas" width="540" height="360" aria-label="Animated Knowledge Distillation pipeline diagram"></canvas>
+          <div class="topology-legend">
+            <div class="legend-item"><span class="dot amber"></span> Teacher Transformer (316M)</div>
+            <div class="legend-item"><span class="dot violet"></span> Soft Logits + Layer Alignment</div>
+            <div class="legend-item"><span class="dot cyan"></span> Edge Student (1.8M)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Core Compression Challenge & 4 KD Paradigms -->
+    <section id="paradigms" class="section">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-kicker">01 // ARCHITECTURE &amp; MECHANISMS</span>
+          <h2>Four Pillars of Speech Emotion Distillation</h2>
+          <p>Why naive pruning fails on prosody—and how multi-level knowledge transfer preserves emotional intelligence under extreme compression.</p>
+        </div>
+
+        <div class="paradigm-grid">
+          <article class="glass-card paradigm-card" data-pillar="logit">
+            <div class="pillar-num">01</div>
+            <h3>Response-Based (Logit) KD</h3>
+            <p>A temperature-scaled softmax (&tau; &gt; 1) exposes the teacher's <em>dark knowledge</em>—revealing secondary affective overlap such as <strong>Angry &harr; Aroused</strong> or <strong>Sad &harr; Neutral</strong> rather than brittle one-hot labels.</p>
+            <div class="formula-chip">L_KL = &tau;&sup2; &middot; D_KL( &sigma;(z_T/&tau;) &parallel; &sigma;(z_S/&tau;) )</div>
+          </article>
+
+          <article class="glass-card paradigm-card" data-pillar="hidden">
+            <div class="pillar-num">02</div>
+            <h3>Hidden-State &amp; Attention Transfer</h3>
+            <p>Aligns intermediate transformer representations using cosine similarity and L2 projection heads. Early layers transfer acoustic frame structure; deeper layers transfer speaker-invariant emotional cues.</p>
+            <div class="formula-chip">L_feat = &Sigma; || W_proj(h_S^l) &minus; h_T^m ||&sup2;</div>
+          </article>
+
+          <article class="glass-card paradigm-card" data-pillar="crossmodal">
+            <div class="pillar-num">03</div>
+            <h3>Acoustic-Prosodic Feature KD</h3>
+            <p>Bridges raw-waveform Self-Supervised Teachers (Wav2Vec 2.0 / WavLM) with lightweight Mel-Spectrogram + F0/MFCC student CNNs, removing heavy convolutional feature encoders at inference time.</p>
+            <div class="formula-chip">Raw Audio (Teacher) &rarr; Log-Mel + F0 (Student)</div>
+          </article>
+
+          <article class="glass-card paradigm-card" data-pillar="relational">
+            <div class="pillar-num">04</div>
+            <h3>Relational &amp; Contrastive KD</h3>
+            <p>Preserves pairwise distances and angular geometry in the embedding space across utterances, ensuring the compressed student separates subtle valence/arousal clusters under noisy edge microphones.</p>
+            <div class="formula-chip">L_RKD = &psi;_dist(e_i, e_j) + &psi;_angle(e_i, e_j, e_k)</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Temperature & Loss Weight KD Simulator -->
+    <section id="kd-simulator" class="section">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-kicker">02 // INTERACTIVE DISTILLATION LAB</span>
+          <h2>Temperature (&tau;) &amp; Dark Knowledge Simulator</h2>
+          <p>Adjust softmax temperature <strong>&tau;</strong>, distillation weight <strong>&alpha;</strong>, and target student architecture to inspect how soft probability distributions and compression trade-offs shift in real time.</p>
+        </div>
+
+        <div class="sim-layout">
+          <!-- Controls Panel -->
+          <div class="glass-card sim-controls">
+            <div class="control-group">
+              <div class="control-header">
+                <label for="tempSlider">Distillation Temperature (&tau;)</label>
+                <span class="val-badge cyan" id="tempValue">4.0</span>
+              </div>
+              <input type="range" id="tempSlider" min="1" max="15" step="0.5" value="4" />
+              <div class="range-hints">
+                <span>1.0 (Sharp / Hard)</span>
+                <span>4.0 (Optimal SER)</span>
+                <span>15.0 (Ultra-Soft)</span>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <div class="control-header">
+                <label for="alphaSlider">KD Loss Balance (&alpha;)</label>
+                <span class="val-badge violet" id="alphaValue">0.70</span>
+              </div>
+              <input type="range" id="alphaSlider" min="0" max="1" step="0.05" value="0.7" />
+              <div class="range-hints">
+                <span>0.0 (Labels Only)</span>
+                <span>0.7 (Balanced)</span>
+                <span>1.0 (Pure Teacher)</span>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label for="studentSelect">Target Edge Student Architecture</label>
+              <select id="studentSelect" class="select-input">
+                <option value="tinyconformer">TinyConformer-KD (1.8M params &bull; 4.2 ms)</option>
+                <option value="mobilenet">MobileNetV3-Spectro (2.4M params &bull; 5.6 ms)</option>
+                <option value="distilhubert">Distil-HuBERT-SER (23.0M params &bull; 19.4 ms)</option>
+                <option value="edgegru">EdgeGRU-Lite INT8 (0.45M params &bull; 1.8 ms)</option>
+              </select>
+            </div>
+
+            <div class="control-group">
+              <label for="utterancePreset">Sample Utterance Ambiguity</label>
+              <select id="utterancePreset" class="select-input">
+                <option value="angry_tense">High-Arousal Tense Speech (Angry / Fearful overlap)</option>
+                <option value="happy_excited">Bright Expressive Speech (Happy / Surprised overlap)</option>
+                <option value="sad_subdued">Low-Energy Subdued Speech (Sad / Neutral overlap)</option>
+                <option value="sarcastic_mixed">Mixed Prosody Utterance (High Dark Knowledge)</option>
+              </select>
+            </div>
+
+            <div class="live-equation glass-inset">
+              <div class="eq-label">ACTIVE OBJECTIVE FUNCTION</div>
+              <code id="liveEquationText">L = 0.30 &middot; L_CE(y, p_S) + 0.70 &middot; (4.0)&sup2; &middot; D_KL(p_T^&tau; &parallel; p_S^&tau;)</code>
+            </div>
+
+            <div class="sim-kpis">
+              <div class="kpi-box">
+                <span class="kpi-title">Projected Student UAR</span>
+                <strong class="kpi-num cyan" id="projectedUar">73.8%</strong>
+                <span class="kpi-sub" id="uarDelta">+4.9% over No-KD</span>
+              </div>
+              <div class="kpi-box">
+                <span class="kpi-title">Compression Ratio</span>
+                <strong class="kpi-num amber" id="compressionRatio">175.6&times;</strong>
+                <span class="kpi-sub" id="footprintSub">7.2 MB FP32 / 1.9 MB INT8</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Logit & Softmax Distribution Visualizer -->
+          <div class="glass-card sim-charts">
+            <div class="card-header">
+              <span class="card-title">SOFTENED PROBABILITY DISTRIBUTION &amp; DARK KNOWLEDGE</span>
+              <span class="status-pill" id="entropyReadout">Entropy: 1.42 bits</span>
+            </div>
+            <canvas id="distillationChart" width="640" height="330" aria-label="Teacher vs Student emotion probability chart"></canvas>
+            <div class="insight-banner" id="tempInsight">
+              At <strong>&tau; = 4.0</strong>, secondary emotional probabilities (e.g., Fearful &amp; Neutral cues) become visible to the student, preventing overconfident misclassification on ambiguous speech.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Acoustic Emotion & Compression Sandbox -->
+    <section id="audio-sandbox" class="section">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-kicker">03 // LIVE AUDIO &amp; INFERENCE SANDBOX</span>
+          <h2>Acoustic Signal &rarr; Teacher vs. Edge Student Inference</h2>
+          <p>Trigger synthesized emotional vocal contours (using Web Audio harmonics, pitch F0 modulation, and envelope dynamics) or connect your microphone to watch real-time spectrogram analysis and distilled edge prediction.</p>
+        </div>
+
+        <div class="sandbox-grid">
+          <div class="glass-card sandbox-controls">
+            <div class="card-header">
+              <span class="card-title">ACOUSTIC INPUT SOURCE</span>
+              <span class="status-pill" id="audioStatusPill">IDLE</span>
+            </div>
+
+            <div class="emotion-btn-grid" role="group" aria-label="Emotion Audio Presets">
+              <button class="emotion-btn active" data-emotion="angry">
+                <span class="emo-tag">ANGRY</span>
+                <small>High F0 &bull; Rapid Burst</small>
+              </button>
+              <button class="emotion-btn" data-emotion="happy">
+                <span class="emo-tag">HAPPY</span>
+                <small>Bright Pitch &bull; Rising</small>
+              </button>
+              <button class="emotion-btn" data-emotion="sad">
+                <span class="emo-tag">SAD</span>
+                <small>Low F0 &bull; Falling Contour</small>
+              </button>
+              <button class="emotion-btn" data-emotion="neutral">
+                <span class="emo-tag">NEUTRAL</span>
+                <small>Steady Formants &bull; Flat</small>
+              </button>
+              <button class="emotion-btn" data-emotion="fearful">
+                <span class="emo-tag">FEARFUL</span>
+                <small>Tremolo Jitter &bull; Tense</small>
+              </button>
+              <button class="emotion-btn" data-emotion="disgusted">
+                <span class="emo-tag">DISGUSTED</span>
+                <small>Low Resonance &bull; Nasal</small>
+              </button>
+            </div>
+
+            <div class="audio-action-row">
+              <button id="playSynthBtn" class="btn btn-primary">Synthesize &amp; Analyze Signal</button>
+              <button id="micToggleBtn" class="btn btn-ghost">Use Live Microphone</button>
+            </div>
+
+            <div class="acoustic-telemetry">
+              <div class="tele-item">
+                <span>Est. Pitch (F0)</span>
+                <strong id="teleF0">248 Hz</strong>
+              </div>
+              <div class="tele-item">
+                <span>RMS Energy</span>
+                <strong id="teleEnergy">-11.4 dB</strong>
+              </div>
+              <div class="tele-item">
+                <span>Spectral Centroid</span>
+                <strong id="teleCentroid">2,180 Hz</strong>
+              </div>
+              <div class="tele-item">
+                <span>Speech Rate Proxy</span>
+                <strong id="teleRate">5.8 syl/s</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Spectrogram & Waveform + Dual Model Comparison -->
+          <div class="glass-card sandbox-viz">
+            <div class="viz-canvases">
+              <div>
+                <div class="mini-label">TIME-DOMAIN ACOUSTIC WAVEFORM</div>
+                <canvas id="waveformCanvas" width="600" height="105"></canvas>
+              </div>
+              <div>
+                <div class="mini-label">LOG-MEL SPECTROGRAM (STUDENT INPUT FEATURES)</div>
+                <canvas id="spectrogramCanvas" width="600" height="135"></canvas>
+              </div>
+            </div>
+
+            <div class="model-compare-grid">
+              <div class="model-box teacher-box">
+                <div class="model-box-head">
+                  <span>TEACHER: WavLM-Large</span>
+                  <span class="badge-amber">316M &bull; 185 ms</span>
+                </div>
+                <div id="teacherBars" class="prob-bars"></div>
+              </div>
+              <div class="model-box student-box">
+                <div class="model-box-head">
+                  <span>STUDENT: TinyConformer-KD</span>
+                  <span class="badge-cyan">1.8M &bull; 4.2 ms</span>
+                </div>
+                <div id="studentBars" class="prob-bars"></div>
+              </div>
+              <div class="model-box nokd-box">
+                <div class="model-box-head">
+                  <span>BASELINE: TinyConformer (No KD)</span>
+                  <span class="badge-muted">1.8M &bull; 4.2 ms</span>
+                </div>
+                <div id="nokdBars" class="prob-bars"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Layer-Wise Acoustic Distillation Explorer -->
+    <section id="layer-mapping" class="section">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-kicker">04 // LAYER-WISE REPRESENTATION TRANSFER</span>
+          <h2>Inside the 24-to-4 Layer Acoustic Compression</h2>
+          <p>Not all transformer layers encode emotion equally. Explore how different layer-mapping strategies distill raw acoustic kinematics into compact student blocks.</p>
+        </div>
+
+        <div class="glass-card layer-explorer">
+          <div class="strategy-tabs" role="tablist" aria-label="Layer Mapping Strategies">
+            <button class="tab-btn active" data-strategy="prosody" role="tab" aria-selected="true">Prosody-Weighted Mapping (Recommended)</button>
+            <button class="tab-btn" data-strategy="uniform" role="tab" aria-selected="false">Uniform Skip Mapping (6:1)</button>
+            <button class="tab-btn" data-strategy="lastk" role="tab" aria-selected="false">Top-Layer Semantic Only</button>
+          </div>
+
+          <div class="layer-grid">
+            <div class="layer-diagram-wrap">
+              <canvas id="layerMapCanvas" width="560" height="300" aria-label="Teacher to Student layer mapping diagram"></canvas>
+            </div>
+            <div class="layer-detail-panel" id="layerDetailPanel">
+              <div class="detail-kicker">SELECTED STRATEGY</div>
+              <h3 id="strategyTitle">Prosody-Weighted Attention &amp; Hidden Transfer</h3>
+              <p id="strategyDesc">Assigns higher distillation weights to early acoustic-prosodic layers (Layers 3&ndash;8: F0, energy, speaking rate) and late affective-semantic layers (Layers 18&ndash;24: emotional valence &amp; intent), yielding +3.1% UAR over uniform skip mapping.</p>
+              <div class="layer-stages">
+                <div class="stage-row">
+                  <span class="stage-tag">Student Block 1</span>
+                  <span>Captures frame energy, pitch F0 &amp; spectral tilt from Teacher L4</span>
+                </div>
+                <div class="stage-row">
+                  <span class="stage-tag">Student Block 2</span>
+                  <span>Aligns phonetic &amp; formant transitions from Teacher L10</span>
+                </div>
+                <div class="stage-row">
+                  <span class="stage-tag">Student Block 3</span>
+                  <span>Transfers suprasegmental prosody &amp; rhythm from Teacher L17</span>
+                </div>
+                <div class="stage-row">
+                  <span class="stage-tag">Student Block 4</span>
+                  <span>Distills utterance-level emotional manifold from Teacher L24</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Benchmark Pareto Frontier & PyTorch Blueprint -->
+    <section id="benchmarks" class="section">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-kicker">05 // BENCHMARKS &amp; DEPLOYMENT BLUEPRINT</span>
+          <h2>Accuracy vs. Latency Pareto Frontier</h2>
+          <p>Compare standard SER teachers against distilled edge students across major speech emotion benchmarks, and grab the live-synced PyTorch distillation loss implementation.</p>
+        </div>
+
+        <div class="bench-layout">
+          <div class="glass-card bench-chart-card">
+            <div class="card-header">
+              <span class="card-title">PARETO FRONTIER (UAR % VS. LATENCY MS)</span>
+              <select id="datasetFilter" class="select-input select-sm" aria-label="Select SER Dataset">
+                <option value="iemocap">IEMOCAP (4-Class)</option>
+                <option value="ravdess">RAVDESS (8-Class)</option>
+                <option value="cremad">CREMA-D (6-Class)</option>
+              </select>
+            </div>
+            <canvas id="paretoCanvas" width="580" height="320" aria-label="Accuracy vs Latency Pareto chart"></canvas>
+            <div class="table-wrap">
+              <table class="bench-table">
+                <thead>
+                  <tr>
+                    <th>Model</th>
+                    <th>Method</th>
+                    <th>Params</th>
+                    <th>Size</th>
+                    <th>Latency</th>
+                    <th>UAR (%)</th>
+                  </tr>
+                </thead>
+                <tbody id="benchTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="glass-card code-card">
+            <div class="card-header">
+              <span class="card-title">PYTORCH SER-KD OBJECTIVE (LIVE SYNCED)</span>
+              <button id="copyCodeBtn" class="btn btn-sm btn-ghost">Copy Snippet</button>
+            </div>
+            <pre class="code-block"><code id="pytorchSnippet"></code></pre>
+            <div class="edge-checklist">
+              <h4>Edge Deployment Pipeline</h4>
+              <ul>
+                <li><strong>1. Teacher Pre-Fine-Tuning:</strong> Fine-tune WavLM-Large on IEMOCAP / MSP-Podcast with SpecAugment.</li>
+                <li><strong>2. Multi-Loss Distillation:</strong> Combine softened KL logits + layer-wise cosine feature alignment.</li>
+                <li><strong>3. Post-Training Quantization:</strong> Export Student to ONNX &amp; apply INT8 dynamic quantization (4&times; smaller).</li>
+                <li><strong>4. Streaming Inference:</strong> Run 20ms sliding-window Mel frames on ARM Cortex / WebAssembly / CoreML.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div>
+        <strong>VOICE-TO-EDGE // SER-KD Lab</strong> &mdash; Interactive Knowledge Distillation Explorer for Speech Emotion Recognition.
+      </div>
+      <div class="footer-note">
+        Interactive simulation models &amp; acoustic synthesis run 100% locally in your browser via Canvas &amp; Web Audio API.
+      </div>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
